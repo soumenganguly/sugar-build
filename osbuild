@@ -162,7 +162,8 @@ def create_virtualenv():
         with tarfile.open(fileobj=buffer, mode="r:gz") as tar:
             tar.extractall(get_cache_dir())
 
-    subprocess.check_call(["python2.7", os.path.join(source_dir, "virtualenv.py"),
+    subprocess.check_call(["python2.7",
+                           os.path.join(source_dir, "virtualenv.py"),
                            "-q", "--system-site-packages",
                            get_virtualenv_dir()])
 
@@ -308,7 +309,7 @@ def setup(command):
 
             packages = ["git+git://github.com/dnarvaez/osbuild"]
             if mode == MODE_HOST:
-                packages.append("git+git://github.com/dnarvaez/broot")
+                packages.append("git+git://github.com/dnarvaez/broot@f20")
             else:
                 packages.extend(["sourcestamp", "flake8"])
 
@@ -486,6 +487,8 @@ def main():
     if options.command == "clean":
         if options.broot:
             broot_run(["clean"])
+        else:
+            broot_run(["clean", "--keep-pristine"])
 
         clean()
 
