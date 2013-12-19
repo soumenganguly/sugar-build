@@ -13,7 +13,6 @@ log_path = os.path.join(logs_dir, "osbuild.log")
 
 from osbuild import main
 from osbuild import config
-from osbuild import environ
 
 
 def is_buildbot():
@@ -22,7 +21,6 @@ def is_buildbot():
 
 def get_config_args():
     config_args = {"config_dir": os.path.join(build_dir),
-                   "install_dir": os.path.join(build_dir, "out", "install"),
                    "source_dir": os.path.join(root_dir),
                    "docs_dir": os.path.join(build_dir, "out", "docs"),
                    "dist_dir": os.path.join(build_dir, "out", "dist"),
@@ -67,14 +65,12 @@ def setup():
     if not main.setup(config_args):
         sys.exit(1)
 
-    if "BROOT" in os.environ:
-        environ.setup_gconf()
+    commands_path = os.path.join(commands_dir, "broot")
 
     os.environ["SUGAR_DEVELOPER"] = "1"
     os.environ["SUGAR_ACTIVITIES_PATH"] = os.path.join(base_dir, "activities")
     os.environ["SUGAR_HOME"] = os.path.join(home_state_dir, "dotsugar")
-
-    environ.add_path("PATH", os.path.join(commands_dir, "broot"))
+    os.environ["PATH"] = os.path.expandvars("PATH=$PATH:%s" % commands_path)
 
 
 def run(command):

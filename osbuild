@@ -34,9 +34,8 @@ docs_url = "http://developer.sugarlabs.org/dev-environment.md.html"
 buildbot_env = "SUGAR_BUILDBOT"
 lock_file = None
 
-MODE_NONE = 1
-MODE_HOST = 2
-MODE_BROOT = 3
+MODE_HOST = 1
+MODE_BROOT = 2
 
 _mode = None
 _prefs = None
@@ -48,9 +47,7 @@ def get_mode():
     if _mode is not None:
         return _mode
 
-    if not get_prefs().get("use_broot", True):
-        _mode = MODE_NONE
-    elif "BROOT" in os.environ:
+    if "BROOT" in os.environ:
         _mode = MODE_BROOT
     else:
         _mode = MODE_HOST
@@ -62,9 +59,7 @@ def get_name_for_mode(base, mode=None):
     if mode is None:
         mode = get_mode()
 
-    if mode == MODE_NONE:
-        return base
-    elif mode == MODE_HOST:
+    if mode == MODE_HOST:
         return "%s-%s" % (base, "host")
     elif mode == MODE_BROOT:
         return "%s-%s" % (base, "broot")
@@ -119,25 +114,6 @@ def get_log_dir():
 
 def get_broot_log_path():
     return os.path.join(get_log_dir(), "broot.log")
-
-
-def get_prefs_path():
-    return os.path.join(get_base_dir(), "prefs.json")
-
-
-def get_prefs():
-    global _prefs
-
-    if _prefs is not None:
-        return _prefs
-
-    try:
-        with open(get_prefs_path()) as f:
-            _prefs = json.load(f)
-    except IOError:
-        _prefs = {}
-
-    return _prefs
 
 
 def get_bin_path(name=None):
@@ -256,9 +232,7 @@ def clean():
     mode = get_mode()
 
     try:
-        if mode == MODE_NONE:
-            os.unlink(get_lock_file_path(MODE_NONE))
-        elif mode == MODE_HOST:
+        if mode == MODE_HOST:
             os.unlink(get_lock_file_path(MODE_HOST))
             os.unlink(get_lock_file_path(MODE_BROOT))
 
@@ -266,9 +240,7 @@ def clean():
     except OSError:
         pass
 
-    if mode == MODE_NONE:
-        delete_sandbox(MODE_NONE)
-    elif mode == MODE_HOST:
+    if mode == MODE_HOST:
         delete_sandbox(MODE_HOST)
         delete_sandbox(MODE_BROOT)
 
@@ -292,8 +264,7 @@ def setup(command):
     build_virtualenv = not get_virtualenv_exists() or full_pull
 
     if build_virtualenv or full_pull:
-        build_system = {MODE_NONE: "build system",
-                        MODE_HOST: "host build system",
+        build_system = {MODE_HOST: "host build system",
                         MODE_BROOT: "broot build system"}
 
         print("\n= Setup the %s =\n" % build_system[mode])
@@ -307,7 +278,7 @@ def setup(command):
 
             print("* Install python packages")
 
-            packages = ["git+git://github.com/dnarvaez/osbuild"]
+            packages = ["git+git://github.com/dnarvaez/osbuild@f20"]
             if mode == MODE_HOST:
                 packages.append("git+git://github.com/dnarvaez/broot@f20")
             else:
@@ -326,9 +297,7 @@ def setup(command):
         os.chdir(get_base_dir())
         subprocess.check_call(["git", "pull", "--ff-only", "-q"])
 
-    if mode == MODE_NONE:
-        install_system_deps()
-    elif full_pull:
+    if full_pull:
         print("* Setup the build root")
         broot_run(["setup"])
 
@@ -342,7 +311,7 @@ def get_available_commands():
 
     commands_dirs = [get_commands_dir("broot")]
 
-    if get_mode() in (MODE_HOST, MODE_NONE):
+    if get_mode() == MODE_HOST:
         commands_dirs.append(get_commands_dir("host"))
 
     for command_dir in commands_dirs:
@@ -477,7 +446,7 @@ def main():
 
     setup(options.command)
 
-    if get_mode() in (MODE_NONE, MODE_BROOT) and options.command == "shell":
+    if get_mode() == MODE_BROOT) and options.command == "shell":
         print_help()
 
     if not run_command(options.command, other_args):
