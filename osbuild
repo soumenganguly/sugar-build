@@ -446,7 +446,7 @@ def main():
 
     setup(options.command)
 
-    if get_mode() == MODE_BROOT) and options.command == "shell":
+    if get_mode() == MODE_BROOT and options.command == "shell":
         print_help()
 
     if not run_command(options.command, other_args):
