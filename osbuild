@@ -302,6 +302,7 @@ def setup(command):
         broot_run(["setup"])
 
         print("* Clean build state")
+        broot_run(["clean", "--keep-pristine"])
         run_command("clean", ["--build-state"])
 
     # When we run the broot osbuild the virtualenv will be updated
