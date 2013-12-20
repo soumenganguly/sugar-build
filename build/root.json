@@ -26,7 +26,8 @@
             "gcc",
             "python-devel",
             "xz",
-            "npm"
+            "npm",
+            "sudo"
         ],
         "sugar": [
             "intltool",
