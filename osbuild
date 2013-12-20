@@ -216,7 +216,7 @@ def broot_run(args, message_args=None, log=True):
     if message_args is None:
         message_args = args
 
-    print("$ sudo broot %s\n" % " ".join(message_args))
+    print("$ sudo broot %s" % " ".join(message_args))
 
     with open(get_broot_log_path(), "w") as f:
         if log:
@@ -301,9 +301,11 @@ def setup(command):
         print("\n* Setup the build root")
         broot_run(["setup"])
 
-        print("* Clean the build root")
+        print("\n* Clean the build root")
         broot_run(["clean", "--keep-pristine"])
         run_command("clean", ["--build-state"])
+
+        print()
 
     # When we run the broot osbuild the virtualenv will be updated
     if get_mode() == MODE_HOST and command == "pull":
