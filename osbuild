@@ -193,7 +193,7 @@ def broot_check_output(args, log=True):
     return subprocess.check_output(broot_args)
 
 
-def broot_run(args, message_args=None,  log=True):
+def broot_run(args, message_args=None, log=True):
     if "XAUTHORITY" not in os.environ:
         os.environ["XAUTHORITY"] = os.path.expanduser("~/.Xauthority")
 
@@ -298,10 +298,10 @@ def setup(command):
         subprocess.check_call(["git", "pull", "--ff-only", "-q"])
 
     if full_pull:
-        print("* Setup the build root")
+        print("\n* Setup the build root")
         broot_run(["setup"])
 
-        print("* Clean the build root")
+        print("\n* Clean the build root")
         broot_run(["clean", "--keep-pristine"])
         run_command("clean", ["--build-state"])
 
