@@ -305,7 +305,7 @@ def setup(command):
         broot_run(["clean", "--keep-pristine"])
         run_command("clean", ["--build-state"])
 
-        print()
+        print
 
     # When we run the broot osbuild the virtualenv will be updated
     if get_mode() == MODE_HOST and command == "pull":
