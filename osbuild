@@ -301,7 +301,7 @@ def setup(command):
         print("\n* Setup the build root")
         broot_run(["setup"])
 
-        print("\n* Clean the build root")
+        print("* Clean the build root")
         broot_run(["clean", "--keep-pristine"])
         run_command("clean", ["--build-state"])
 
