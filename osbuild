@@ -216,7 +216,7 @@ def broot_run(args, message_args=None,  log=True):
     if message_args is None:
         message_args = args
 
-    print("$ sudo broot %s" % " ".join(message_args))
+    print("$ sudo broot %s\n" % " ".join(message_args))
 
     with open(get_broot_log_path(), "w") as f:
         if log:
